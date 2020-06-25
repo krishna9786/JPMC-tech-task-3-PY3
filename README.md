@@ -111,6 +111,7 @@ rendered to the DOM.
 how we’ll be able to configure the Perspective table view of our graph.
 <br/><br/>
 </p>
+<p>
  so the code look like this 
 </p><br/>
 <h4> Before change</h4>
@@ -143,3 +144,254 @@ componentDidMount() {
    };
 }
 </pre>
+<p>
+Since we don’t want to distinguish between two stocks now, but instead want to track their
+ratios, we made sure to add the ratio field. Since we also wanted to track upper_bound,
+lower_bound, and the moment when these bounds are crossed i.e. trigger_alert, we had to
+add those fields too.
+</p>
+
+<p>
+ Finally, the reason we added price_abc and price_def is just because these were necessary
+to get the ratio as you will see later. We won’t be configuring the graph to show them anyway.
+</p>
+<p>
+since we’re tracking all of this with respect to time, timestamp is going to be there
+</p>
+<p>
+Next, we going to configure our graph you will need to modify/add more attributes to the
+element.
+<p>
+ so the code look like this 
+</p><br/>
+<h4> Before change</h4>
+<pre>
+componentDidMount() {
+    ....
+    ....
+    if (this.table) {
+      // Load the `table` in the `<perspective-viewer>` DOM reference.
+      elem.load(this.table);
+      elem.setAttribute('view', 'y_line');
+      elem.setAttribute('column-pivots', '["stock"]');
+      elem.setAttribute('row-pivots', '["timestamp"]');
+      elem.setAttribute('columns', '["top_ask_price"]');
+      elem.setAttribute('aggregates', JSON.stringify({
+        stock: 'distinctcount',
+        top_ask_price: 'avg',
+        top_bid_price: 'avg',
+        timestamp: 'distinct count',
+      }));
+    }
+ }
+</pre>
+<h4>After change</h4>
+<pre>
+componentDidMount() {
+    ....
+    ....
+    if (this.table) {
+      // Load the `table` in the `<perspective-viewer>` DOM reference.
+      elem.load(this.table);
+      /* changed some the attribute for table*/ 
+      elem.setAttribute('view', 'y_line');
+      elem.setAttribute('row-pivots', '["timestamp"]');
+      /* filter the columns that we only want to display ratio lowerbound,upperbound,triggeralert in graph*/
+      elem.setAttribute('columns', '["ratio","lower_bound","upper_bound","trigger_alert"]');
+      elem.setAttribute('aggregates', JSON.stringify({
+      price_abc:'avg',
+      price_def:'avg',
+      ratio:'avg',
+      timestamp: 'distinct count',
+      upper_bound: 'avg',
+      lower_bound: 'avg',
+      trigger_alert:'avg',
+      }));
+    }
+}
+</pre>
+<p>
+Finally, we have to make a slight update in the componentDidUpdate method.
+This method is another component lifecycle method that gets executed
+whenever the component updates, i.e. when the graph gets updated in our
+case. The change we want to make is on the argument we put in
+this.table.update.
+</p>
+<p>
+ so the code look like this 
+</p><br/>
+<h4> Before change</h4>
+<pre>
+ componentDidUpdate() {
+    if (this.table) {
+      this.table.update(
+        DataManipulator.generateRow(this.props.data),
+      );
+    }
+  }
+</pre>
+<h4>After change</h4>
+<pre>
+ componentDidUpdate() {
+    if (this.table) {
+    /* passing server data to generaterow function  and store the return value as array and pass to table update function*/
+      this.table.update([DataManipulator.generateRow(this.props.data)] );
+    }
+  }
+</pre>
+
+<h3>Making changes in `DataManipulator.ts`</h3>
+<p>
+● To fully achieve our goal in this task, we have to make some modifications in
+the DataManipulator.ts file. This file will be responsible for processing the raw
+stock data we’ve received from the server before it throws it back to the Graph
+component’s table to render. Initially, it’s not really doing any processing hence
+we were able to keep the status quo from the finished product in task 2
+<br/><br/>
+● The first thing we have to modify in this file is the Row interface. If you see,
+the initial setting of the Row interface is almost the same as the old schema in
+Graph.tsx before we updated it. So now, we have to update it to match the
+new schema. 
+<br/><br/>
+<p>
+ so the code look like this 
+</p><br/>
+<h4> Before change</h4>
+<pre>
+ export interface Row {
+  stock: string,
+  top_ask_price: number,
+  timestamp: Date,
+}
+</pre>
+<h4>After change</h4>
+<pre>
+/*changed interface row  by add new value(property) and remove some value*/
+export interface Row {
+ price_abc:number,
+ price_def:number,
+ ratio:number,
+ timestamp: Date,
+ upper_bound: number,
+ lower_bound: number,
+ trigger_alert:number | undefined,
+}
+/*trigger_alert may number or undefined because that only render if the ratio go above upperbound or go below the lowerbound*/
+</pre>
+<p>
+Finally, we have to update the generateRow function of the DataManipulator
+class to properly process the raw server data passed to it so that it can return
+the processed data which will be rendered by the Graph component’s table.</p>
+<br><br>
+<p>
+● Here we can compute for price_abc and price_def properly. next we  also compute for ratio using the two
+computed prices and  set lower and upperbounds as well as trigger_alert.
+</p><br><br>
+
+<p>
+ so the code look like this 
+</p><br/>
+<h4> Before change</h4>
+<pre>
+export class DataManipulator {
+  static generateRow(serverResponds: ServerRespond[]): Row[] {
+    return serverResponds.map((el: any) => {
+      return {
+        stock: el.stock,
+        top_ask_price: el.top_ask && el.top_ask.price || 0,
+        timestamp: el.timestamp,
+      };
+    })
+  }
+}
+</pre>
+<h4>After change</h4>
+<pre>
+export class DataManipulator {
+ /* array of Row objects to just a single Row object This change explains why we also adjusted the argument we passed to table.update in Graph.tsx earlier */
+  static generateRow(serverResponds: ServerRespond[]): Row {
+    /* calculate the price of trade , ratio, upperbound,lowerboud*/
+    const priceABC=(serverResponds[0].top_ask.price+serverResponds[0].top_bid.price)/2;
+    const priceDEF=(serverResponds[1].top_ask.price+serverResponds[1].top_bid.price)/2;
+    const ratio=priceABC/priceDEF;
+    const upperbound=1+0.05;
+    const lowerbound=1-0.05;
+    /* assign greater timestamp */
+    const timestamp=serverResponds[0].timestamp > serverResponds[1].timestamp ?serverResponds[0].timestamp:serverResponds[1].timestamp;
+    /* assign ratio value to triggeralert if the ratio between lowerbound and upperbound alse assign undefined*/
+    const triggeralert=(ratio >upperbound || ratio<lowerbound ) ? ratio:undefined;
+    /*return the data to graph componentDidUpdate function*/
+    return {price_abc:priceABC,
+        price_def:priceDEF,
+        ratio:ratio,
+        timestamp:timestamp,
+        upper_bound:upperbound,
+        lower_bound :lowerbound,
+        trigger_alert:triggeralert,
+      };    
+  }
+}
+</pre>
+<p>
+Changes in DataManipulator.ts are done. By now we should have  accomplished all the objectives of the task.
+</p>
+<hr/>
+<h1>Step3.Generate a patch file of the changes you made.</h1>
+<p>
+Follow this steps to create patch file 
+open a terminal, enter the repository via the terminal you opened (via the cd
+<repo_name_here> aka change directory command) and do the following commands
+(one line, one command)</p><br/>
+<ol>
+<li>git add -A</li>
+<li>git config user.email "<your_email_address>"</li>
+<li>git config user.name "<your_name>"</li>
+<li>git commit -m 'Create Patch File'</li>
+<li>git format-patch -1 HEAD</li>
+</ol>
+<br/>
+<br/>
+The final command, i.e. git format-patch -1 HEAD, should produce the .patch file
+you’d want to submit to complete this module. It will be located in the directory
+where you executed the command.
+<hr>
+
+<h1>Resource</h1>
+<p> Finally i am going to share the resource i used for this task</p>
+<ol>
+  <li>Node js resource</li>
+  <ol>
+    <li> <a href="https://www.youtube.com/watch?v=fBNz5xF-Kx4">YouTube videos</a></li>
+    <li> <a href="https://www.youtube.com/watch?v=vJEO57B05Sg">YouTube videos</a></li>
+    <li> <a href="https://www.youtube.com/watch?v=TlB_eWDSMt4">YouTube videos</a></li>
+  </ol>
+    
+
+<li>React js resource</li>
+  <ol>
+    <li> <a href="https://www.youtube.com/watch?v=sBws8MSXN7A&t=682s">YouTube videos</a></li>
+    <li> <a href="https://www.youtube.com/watch?v=nvHeB32ICDM">YouTube videos</a></li>
+    <li> <a href="https://www.youtube.com/watch?v=Ke90Tje7VS0">YouTube videos</a></li>
+  </ol>
+  
+<li>Type Script resource</li>
+  <ol>
+    <li> <a href="https://www.youtube.com/watch?v=NjN00cM18Z4">YouTube videos</a></li>
+    <li> <a href="https://www.youtube.com/watch?v=rAy_3SIqT-E">YouTube videos</a></li>
+    <li> <a href="https://www.youtube.com/watch?v=ahCwqrYpIuM">YouTube videos</a></li>
+  </ol><br/>
+  <p>Last but not least <a href="https://www.w3schools.com/">W3School</a></p>
+  </ol>
+  
+<hr>
+<h1> Conclusion</h1>
+
+<p> What are the things i learned from this task</p>
+<ol>
+  <li> Node js fundamental</li>
+  <li> React js fundamental</li>
+  <li> Type Script fundamental</li>
+</ol><br/>
+<hr> 
+<p> ALL THE BEST</p><br/>
+<hr>
