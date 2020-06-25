@@ -265,6 +265,7 @@ new schema.
 }
 </pre>
 <h4>After change</h4>
+
 <pre>
 /*changed interface row  by add new value(property) and remove some value*/
 export interface Row {
@@ -278,10 +279,12 @@ export interface Row {
 }
 /*trigger_alert may number or undefined because that only render if the ratio go above upperbound or go below the lowerbound*/
 </pre>
+
 <p>
 Finally, we have to update the generateRow function of the DataManipulator
 class to properly process the raw server data passed to it so that it can return
-the processed data which will be rendered by the Graph component’s table.</p>
+the processed data which will be rendered by the Graph component’s table.
+</p>
 <br><br>
 <p>
 ● Here we can compute for price_abc and price_def properly. next we  also compute for ratio using the two
@@ -292,6 +295,7 @@ computed prices and  set lower and upperbounds as well as trigger_alert.
  so the code look like this 
 </p><br/>
 <h4> Before change</h4>
+
 <pre>
 export class DataManipulator {
   static generateRow(serverResponds: ServerRespond[]): Row[] {
@@ -305,6 +309,7 @@ export class DataManipulator {
   }
 }
 </pre>
+
 <h4>After change</h4>
 
 <pre>
@@ -337,13 +342,15 @@ export class DataManipulator {
 <p>
 Changes in DataManipulator.ts are done. By now we should have  accomplished all the objectives of the task.
 </p>
+
 <hr/>
 <h1>Step3.Generate a patch file of the changes you made.</h1>
 <p>
 Follow this steps to create patch file 
 open a terminal, enter the repository via the terminal you opened (via the cd
 <repo_name_here> aka change directory command) and do the following commands
-(one line, one command)</p><br/>
+(one line, one command)
+</p><br/>
 <ol>
 <li>git add -A</li>
 <li>git config user.email "your_email_address"</li>
@@ -353,7 +360,8 @@ open a terminal, enter the repository via the terminal you opened (via the cd
 </ol>
 <br/>
 <br/>
-The final command, i.e. git format-patch -1 HEAD, should produce the .patch file
+<p>
+The final command, that is  git format-patch -1 HEAD, should produce the .patch file
 you’d want to submit to complete this module. It will be located in the directory
 where you executed the command.
 <hr>
