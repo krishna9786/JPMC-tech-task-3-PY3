@@ -325,7 +325,7 @@ export class DataManipulator {
     /* assign greater timestamp */
     const timestamp=serverResponds[0].timestamp > serverResponds[1].timestamp ?serverResponds[0].timestamp:serverResponds[1].timestamp;
     /* assign ratio value to triggeralert if the ratio between lowerbound and upperbound alse assign undefined*/
-    const triggeralert=(ratio >upperbound || ratio<lowerbound ) ? ratio:undefined
+    const triggeralert=(ratio &lt;upperbound || ratio&gt;lowerbound ) ? ratio:undefined
     /*return the data to graph componentDidUpdate function*/
     return {  price_abc:priceABC,price_def:priceDEF, ratio:ratio, timestamp:timestamp, upper_bound:upperbound, lower_bound :lowerbound, trigger_alert:triggeralert,};    
   }
