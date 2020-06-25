@@ -70,8 +70,15 @@ For the third module of this project will need you to accomplish the following:
       |--Graph.css  -> this css file for graph.tsx 
 </pre>
 
-<p>The above codes are work fine but we need to modify the code such that it show the top_ask price from the two stocks("ABC","DEF") in graph
-and need to uppdate the graph according to the data get from the server 
-</p>
-<p>
+<p>There are two things we have to achieve here to complete this task</p>
+<ol>
+<li>We now want to make this graph more useful to traders by making it
+track the ratio between two stocks over time and NOT the two stocks’
+  top_ask_price over time.</li><br/>
+<li>As mentioned before, traders want to monitor the ratio of two stocks
+against a historical correlation with upper and lower thresholds/bounds.
+This can help them determine a trading opportunity.That said, we also want
+to make this graph plot those upper and lower thresholds and show when
+they get crossed by the ratio of the stock </li><br/>
+</ol>
 
