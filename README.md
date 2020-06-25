@@ -13,7 +13,7 @@ This repo for the task 3<br/>
 <hr>
 <h3> WARNING: My English not so good. so applogize me </h3>
 <hr>
-<h1>Task2 </h1>
+<h1>Task 3</h1>
 <p>
 Here is the background information on our task
 Being able to access and  adjust data feeds is critical to any trading analysis and stock price monitoring. From the previous tasks, we now have the adjusted data set up on your systems and being piped into Perspective.
@@ -86,7 +86,7 @@ they get crossed by the ratio of the stock </li><br/>
 2.src/DataManipulator.ts<br/>
 <br/>
 
-<h3>Making changes in `App.tsx`</h3>
+<h3>Making changes in `Graph.tsx`</h3>
 <p>
 ● App.tsx is the main app (typescript) file of our client side react application.
  <br/><br/>
@@ -111,4 +111,35 @@ rendered to the DOM.
 how we’ll be able to configure the Perspective table view of our graph.
 <br/><br/>
 </p>
-  
+ so the code look like this 
+</p><br/>
+<h4> Before change</h4>
+<pre>
+componentDidMount() {
+    ....
+    ....
+    const schema = {
+      stock: 'string',
+      top_ask_price: 'float',
+      top_bid_price: 'float',
+      timestamp: 'date',
+    };
+ }
+</pre>
+<h4>After change</h4>
+<pre>
+componentDidMount() {
+    ....
+    ....
+    /*price_abc and price_def for calculate ratio */
+    const schema = {
+      price_abc:'float', 
+      price_def: 'float',
+      ratio: 'float',
+      timestamp: 'date',
+      upper_bound:'float',
+      lower_bound:'float',
+      trigger_alert:'float',
+   };
+}
+</pre>
