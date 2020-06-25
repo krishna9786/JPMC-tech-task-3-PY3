@@ -81,4 +81,25 @@ This can help them determine a trading opportunity.That said, we also want
 to make this graph plot those upper and lower thresholds and show when
 they get crossed by the ratio of the stock </li><br/>
 </ol>
+<p>To achieve this we have to change (2) files</p><br/>
+1.src/Graph.tsx <br/>
+2.src/DataManipulator.ts<br/>
+<br/>
 
+<h3>Making changes in `App.tsx`</h3>
+<p>
+● App.tsx is the main app (typescript) file of our client side react application.
+ <br/><br/>
+● To accomplish our first objective, we must first make changes to the
+`Graph.tsx` file. Recall, this is the file that takes care of how the Graph
+component of our App will be rendered and react to the state changes that
+occur within the App.
+<br/><br/>
+● We’re not starting from a static graph anymore and we’re basically jumping off
+from where we’ve finished in task 2. So the changes we’ll be making here
+aren’t going to be as much. What we want to do here is to have one main line
+tracking the ratio of two stocks and be able to plot upper and lower bounds
+too.
+<br/><br/>
+</p>
+  
