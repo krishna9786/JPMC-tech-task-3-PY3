@@ -102,4 +102,13 @@ tracking the ratio of two stocks and be able to plot upper and lower bounds
 too.
 <br/><br/>
 </p>
+<p>
+To do this, we need to modify `componentDidMount` method. Recall, the
+componentDidMount() method runs after the component output has been
+rendered to the DOM.
+ <br/><br/>
+● In this method, we first have to modify the schema object as that will dictate
+how we’ll be able to configure the Perspective table view of our graph.
+<br/><br/>
+</p>
   
