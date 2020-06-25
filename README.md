@@ -358,7 +358,31 @@ The final command, that is  git format-patch -1 HEAD, should produce the .patch 
 you’d want to submit to complete this module. It will be located in the directory
 where you executed the command.
 <hr>
+<h1>Bonus</h1>
+<p>
+Additionally, as a bonus, we'd like it if you could also submit a video or audio explanation of your thought process to arrive at the final chart you have produced. This should effectively be a walk through of the final product along with an explanation of the insights a trader will be expected to draw from this new chart.</p>
 
+<p>My answer</p>
+<hr>
+<h3>WARNING: I May be have wrong answer or have mistake in it so forgive me </h3>
+<hr>
+<p>
+1. My thought process to arrive at the final chart .</p>
+<p>2. An explanation of the insights a trader will be expected to draw from this new chart.</p>
+
+<p>1. My thought process to arrive at the final chart .</p>
+   <p> In this task we need to make chart simple such that the trader easily get know about the stocks
+ so instead for showing graph between two stocks we can show the ratio between two stocks
+ so it will easy for the trader to know about stocks.additionaly we going to add uppperbound and lowerbound 
+ to the chart using historical data so it will easy the trader to know when the stock is going above the 
+ uppperbound and below the lowerbound.To acuurately show that we use triggeralert it draw when the ratio above
+ or below the uppperbound and lowerbound.</p>
+  
+
+<p>2. An explanation of the insights a trader will be expected to draw from this new chart.</p>
+  <p> From seeing the graph the tader can conclude if he can invest in the ABC stock or DEF stock
+   if the ratio go up he can invest in the ABC stock 
+   else if the the ratio go down he can invest in the DEF stock</p>
 <h1>Resource</h1>
 <p> Finally i am going to share the resource i used for this task</p>
 <ol>
