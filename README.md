@@ -306,6 +306,7 @@ export class DataManipulator {
 }
 </pre>
 <h4>After change</h4>
+
 <pre>
 export class DataManipulator {
  /* array of Row objects to just a single Row object This change explains why we also adjusted the argument we passed to table.update in Graph.tsx earlier */
@@ -332,6 +333,7 @@ export class DataManipulator {
   }
 }
 </pre>
+
 <p>
 Changes in DataManipulator.ts are done. By now we should have  accomplished all the objectives of the task.
 </p>
@@ -344,8 +346,8 @@ open a terminal, enter the repository via the terminal you opened (via the cd
 (one line, one command)</p><br/>
 <ol>
 <li>git add -A</li>
-<li>git config user.email "<your_email_address>"</li>
-<li>git config user.name "<your_name>"</li>
+<li>git config user.email "your_email_address"</li>
+<li>git config user.name "your_name"</li>
 <li>git commit -m 'Create Patch File'</li>
 <li>git format-patch -1 HEAD</li>
 </ol>
